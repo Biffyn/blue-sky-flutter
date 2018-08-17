@@ -7,3 +7,5 @@
 build/
 
 .flutter-plugins
+
+functions/node_modules/

@@ -1,16 +1,21 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:blue_sky/models/current_forecast.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import './forecast/hourly.dart' as hourlyForecast;
 import './forecast/daily.dart' as dailyForecast;
 import './forecast/current.dart' as currentForecast;
 
-import 'package:geolocation/geolocation.dart';
+import 'package:location/location.dart' as geoloc;
+import './models/location_data.dart';
 
 final primaryColor = const Color(0xFF38B6FF);
 
 class HomePage extends StatefulWidget {
   static String tag = 'home-page';
-  
+
   HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -22,6 +27,8 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController controller;
+  LocationData _locationData;
+  //CurrentForecastViewModel _currentForcast;
 
   @override
   void initState() {
@@ -36,11 +43,56 @@ class _MyHomePageState extends State<HomePage>
     super.dispose();
   }
 
+
+  Future<String> _getAddress(double lat, double lng) async {
+    final uri = Uri.https(
+      'us-central1-blue-sky-bfafb.cloudfunctions.net',
+      '/googleGeocoding',
+      {'latitude': '${lat.toString()}', 'longitude': '${lng.toString()}'},
+    );
+
+    final http.Response response = await http.get(uri);
+
+    setState(() {
+      final decodedResponse = json.decode(response.body);
+
+      _locationData = LocationData(
+          city: decodedResponse['city'],
+          district: decodedResponse['district'],
+          latitude: lat,
+          longitude: lng);
+    });
+
+    return "Success!";
+  }
+
+  getLocation() async {
+    final location = geoloc.Location();
+    final currentLocation = await location.getLocation;
+    return await _getAddress(
+        currentLocation['latitude'], currentLocation['longitude']);
+  }
+
+  Future<String> getforecast(double lat, double lng) async {
+    final uri = Uri.https(
+      'us-central1-blue-sky-bfafb.cloudfunctions.net',
+      '/darkSkyProxy',
+      {'latitude': '${lat.toString()}', 'longitude': '${lng.toString()}'},
+    );
+
+    final http.Response response = await http.get(uri);
+    final decodedResponse = json.decode(response.body);
+    print(decodedResponse);
+
+    return "Success!";
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text('Westerberg, Osnabrück'),
+          title: new Text(_locationData.district + ', ' + _locationData.city),
           backgroundColor: primaryColor,
           actions: <Widget>[
             IconButton(
@@ -72,18 +124,26 @@ class _MyHomePageState extends State<HomePage>
                 ),
               ),
               new ListTile(
-                title: new Text('Home'),
-                trailing: new Icon(Icons.arrow_right),
+                title: new Text('My Locations'),
+                trailing: new Icon(Icons.location_on),
                 onTap: () {
                   print('pressed');
                 },
               ),
               new Divider(),
               new ListTile(
-                title: new Text('Get Location'),
-                trailing: new Icon(Icons.arrow_right),
+                title: new Text('Settings'),
+                trailing: new Icon(Icons.settings),
                 onTap: () {
-                  getLocation();
+                 //do something here
+                },
+              ), 
+              new Divider(),
+              new ListTile(
+                title: new Text('Uinits'),
+                trailing: new Icon(Icons.settings),
+                onTap: () {
+                 //do something here
                 },
               ),
             ],
@@ -98,21 +158,4 @@ class _MyHomePageState extends State<HomePage>
           ],
         ));
   }
-
-  getPermission() async {
-    final GeolocationResult result =
-        await Geolocation.requestLocationPermission(const LocationPermission(
-            android: LocationPermissionAndroid.fine,
-            ios: LocationPermissionIOS.always));
-    return result;
-  }
- 
-  getLocation() async {
-    LocationResult result = await Geolocation.lastKnownLocation();
-      print("Last known");
-      print(result.location.latitude);
-      print(result.location.longitude.toString());
-    
-  }
-
 }
