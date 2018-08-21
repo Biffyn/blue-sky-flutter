@@ -27,7 +27,7 @@ exports.darkSkyProxy = functions.https.onRequest((req, res) => {
 
 });
 
-exports.googleGeocoding = functions.https.onRequest((req, res) => {
+exports.geocoding = functions.https.onRequest((req, res) => {
 
   cors(req, res, () => {
 
@@ -49,23 +49,13 @@ exports.googleGeocoding = functions.https.onRequest((req, res) => {
 
 function formatAddress(address) {
 
-  let address_components = address.results[0].address_components;
-
   let formattedAddress = {
-    city: "",
-    district: "",
+    city: address.address.city,
+    suburb: address.address.suburb,
+    latitude: address.lat,
+    longitude: address.lon
   }
-
-  address_components.forEach(function (val) {
-    if (val.types[0] === "political") {
-      formattedAddress.district = val.long_name;
-    }
-
-    if (val.types[0] === "locality") {
-      formattedAddress.city = val.long_name;
-    }
-    
-  })
+  
   return formattedAddress
 }
 
@@ -77,5 +67,7 @@ function formatDarkSkyUrl(latitude, longitude, units) {
 
 function formatGeocodingUrl(latitude, longitude) {
   const apiKey = functions.config().geocoding.key;
-  return `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+  return `https://us1.locationiq.com/v1/reverse.php?key=${apiKey}&lat=${latitude}&lon=${longitude}&format=json`
+
+ 
 }

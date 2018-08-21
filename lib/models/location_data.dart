@@ -1,13 +1,13 @@
 class LocationData {
-  final double latitude;
-  final double longitude;
+  final String latitude;
+  final String longitude;
   final String city;
-  final String district;
+  final String suburb;
 
   LocationData({
     this.latitude, 
     this.longitude, 
     this.city,
-    this.district
+    this.suburb
   });
 }
