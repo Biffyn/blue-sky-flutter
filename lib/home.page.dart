@@ -1,17 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:blue_sky/forecast/current.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocation/geolocation.dart';
+import 'package:blue_sky/models/current_forecast.dart';
 import 'package:http/http.dart' as http;
-
-import './forecast/hourly.dart' as hourlyForecast;
-import './forecast/daily.dart' as dailyForecast;
-import './models/current_forecast.dart';
+import 'package:blue_sky/models/location_data.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocation/geolocation.dart';
 import 'package:rxdart/rxdart.dart';
 
-import './models/location_data.dart';
+import './ui/forecast/current.dart';
+import './ui/forecast/hourly.dart';
+import './ui/forecast/daily.dart';
+import './ui/radar/radar.dart';
+import './ui/locations/my_locations.dart';
+import 'package:blue_sky/ui/theme/theme.dart';
 
 final primaryColor = const Color(0xFF38B6FF);
 
@@ -28,9 +31,10 @@ class HomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  TabController controller;
   LocationData _locationData;
   Current _currentForecast;
+  PageController _pageController;
+  int _page = 0;
 
   bool isBusy = false;
 
@@ -41,14 +45,24 @@ class _MyHomePageState extends State<HomePage>
     isBusy = true;
     super.initState();
     _initialize();
-    controller = new TabController(vsync: this, length: 3);
+    _pageController = new PageController();
   }
 
   @override
   void dispose() {
-    controller.dispose();
     subject.close();
     super.dispose();
+    _pageController.dispose();
+  }
+
+  void navigationTapped(int page) {
+    _pageController.jumpToPage(page);
+  }
+
+  void onPageChanged(int page) {
+    setState(() {
+      this._page = page;
+    });
   }
 
   _initialize() async {
@@ -66,12 +80,12 @@ class _MyHomePageState extends State<HomePage>
       });
     });
 
-    getForecast(result.latitude.toString(), result.longitude.toString()).then((current) {
+    getForecast(result.latitude.toString(), result.longitude.toString())
+        .then((current) {
       setState(() {
         _currentForecast = current;
       });
     });
-  
   }
 
   Future<LocationResult> _getCoords() async {
@@ -89,17 +103,16 @@ class _MyHomePageState extends State<HomePage>
   }
 
   Future<Current> getForecast(String lat, String lng) async {
-    
     final http.Client _client = new http.Client();
-    var url = 'https://us-central1-blue-sky-bfafb.cloudfunctions.net/darkSkyProxy?latitude=${lat.toString()}&longitude=${lng.toString()}';
+    var url =
+        'https://us-central1-blue-sky-bfafb.cloudfunctions.net/darkSkyProxy?latitude=${lat.toString()}&longitude=${lng.toString()}';
     return await _client
-    .get(Uri.parse(url))
-    .then((res) => res.body)
-    .then(json.decode)
-    .then((json) => json['currently'])
-    .then((jsonCurrent) => new Current.fromJson(jsonCurrent));
+        .get(Uri.parse(url))
+        .then((res) => res.body)
+        .then(json.decode)
+        .then((json) => json['currently'])
+        .then((jsonCurrent) => new Current.fromJson(jsonCurrent));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,72 +120,100 @@ class _MyHomePageState extends State<HomePage>
       return new Container();
     }
 
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text(_locationData.suburb + ', ' + _locationData.city),
-          backgroundColor: primaryColor,
-          actions: <Widget>[
-            IconButton(
-              icon: new Icon(Icons.search),
-              onPressed: () {
-                print('pressed');
-              },
+    final appBar = AppBar(
+      title: Text(_locationData.suburb + ', ' + _locationData.city),
+      backgroundColor: $Colors.primaryColor,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(FontAwesomeIcons.globeAmericas),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyLocationsPage()),
+            );
+          },
+        ),
+      ],
+    );
+
+    final drawer = Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text('Drawer Header', style: TextStyle(color: Colors.white)),
+            decoration: BoxDecoration(
+              color: $Colors.primaryColor,
             ),
-          ],
-          bottom: new TabBar(
-            controller: controller,
-            indicatorColor: Colors.white,
-            tabs: <Widget>[
-              new Tab(text: 'Now'),
-              new Tab(text: 'Hourly'),
-              new Tab(text: 'Daily'),
-            ],
           ),
-        ),
-        drawer: new Drawer(
-          child: new ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Text('Drawer Header',
-                    style: new TextStyle(color: Colors.white)),
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                ),
-              ),
-              new ListTile(
-                title: new Text('My Locations'),
-                trailing: new Icon(Icons.location_on),
-                onTap: () {
-                  print('pressed');
-                },
-              ),
-              new Divider(),
-              new ListTile(
-                title: new Text('Settings'),
-                trailing: new Icon(Icons.settings),
-                onTap: () {
-                  //do something here
-                },
-              ),
-              new Divider(),
-              new ListTile(
-                title: new Text('Uinits'),
-                trailing: new Icon(Icons.settings),
-                onTap: () {
-                  //do something here
-                },
-              ),
-            ],
+          ListTile(
+            title: Text('My Locations'),
+            trailing: Icon(Icons.location_on),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyLocationsPage()),
+              );
+            },
           ),
+          Divider(),
+          ListTile(
+            title: Text('Settings'),
+            trailing: Icon(Icons.settings),
+            onTap: () {
+              //do something here
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Units'),
+            trailing: Icon(Icons.settings),
+            onTap: () {
+              //do something here
+            },
+          ),
+        ],
+      ),
+    );
+
+    final pages = PageView(
+      children: [
+        CurrentForecast(currentForecastObj: _currentForecast),
+        HourlyForecast(),
+        DailyForecast(),
+        RadarPage(),
+      ],
+      controller: _pageController,
+      onPageChanged: onPageChanged);
+
+    final nav = BottomNavigationBar(
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.umbrella), 
+          title: Text("Summary")
         ),
-        body: new TabBarView(
-          controller: controller,
-          children: <Widget>[
-            new CurrentForecast(currentForecastObj: this._currentForecast),
-            new hourlyForecast.HourlyForecast(),
-            new dailyForecast.DailyForecast(),
-          ],
-        ));
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.clock),
+          title: Text("Hourly")
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.calendarAlt), 
+          title: Text("Daily")
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.map),
+          title: Text("Radar")
+        )
+      ],
+      onTap: navigationTapped,
+      currentIndex: _page,
+      type: BottomNavigationBarType.fixed,
+    );
+
+    return new Scaffold(
+        appBar: appBar, 
+        drawer: drawer, 
+        body: pages, 
+        bottomNavigationBar: nav);
   }
 }
