@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:blue_sky/models/location_data.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocation/geolocation.dart';
+import 'package:geolocator/geolocator.dart';
+
 import 'package:rxdart/rxdart.dart';
 
 import './ui/forecast/current.dart';
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<HomePage>
 
   _initialize() async {
     final location = await _getCoords();
-    final result = location.location;
+    final result = location;
 
     _getAddress(result.latitude, result.longitude).then((res) {
       setState(() {
@@ -88,9 +89,9 @@ class _MyHomePageState extends State<HomePage>
     });
   }
 
-  Future<LocationResult> _getCoords() async {
-    Future<LocationResult> result = Geolocation.lastKnownLocation();
-    return result;
+  Future<Position> _getCoords() async {
+    Position position = await Geolocator().getLastKnownPosition(LocationAccuracy.high);
+    return position;
   }
 
   Future<http.Response> _getAddress(double lat, double lng) async {
