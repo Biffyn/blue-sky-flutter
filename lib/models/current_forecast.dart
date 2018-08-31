@@ -1,6 +1,6 @@
 class Current extends Object {
 
- 
+  final int id;
   final String summary;
   final String icon;
   final double precipIntensity;
@@ -19,7 +19,8 @@ class Current extends Object {
 
 
   Current({
-   
+    
+    this.id,
     this.summary,
     this.icon,
     this.precipIntensity,
@@ -48,6 +49,20 @@ class Current extends Object {
     uvIndex = jsonMap['uvIndex'].toInt();
 
   //factory Current.fromJson(Map<String, dynamic> json)
+
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+    map['id'] = id;
+    map['summary'] = summary;
+    map['icon'] = icon;
+    map['precipIntensity'] = precipIntensity;
+    map['precipProbability'] = precipProbability;
+    map['temperature'] = temperature;
+    map['apparentTemperature'] = apparentTemperature;
+    map['uvIndex'] = uvIndex;
+
+    return map;
+  }
 
 }
 
