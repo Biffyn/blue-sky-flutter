@@ -25,6 +25,7 @@ dev_dependencies:
   json_serializable: '^1.2.1'
   intl_translation: "^0.17.0"
   flutter_launcher_icons: "^0.6.1"
+  intl: ^0.15.7
 
   flutter_test:
     sdk: flutter
@@ -47,12 +48,6 @@ flutter:
   assets:
     - assets/umbrella.png
     - assets/placeholder.png
-    - assets/banks.png
-    - assets/hotels.png
-    - assets/key.png
-    - assets/shopping_cart.png
-    - assets/stores.png
-    - assets/wallet.png
  
 
   # An image asset can refer to one or more resolution-specific "variants", see

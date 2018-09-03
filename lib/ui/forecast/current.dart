@@ -1,4 +1,3 @@
-import 'package:blue_sky/models/current_forecast.dart';
 import 'package:flutter/material.dart';
  
 class CurrentForecast extends StatefulWidget  {
@@ -12,6 +11,7 @@ class CurrentForecast extends StatefulWidget  {
 
 class _CurrentForecastState extends State<CurrentForecast> {
   @override
+
   Widget build(BuildContext context) {
     if (widget.currentForecastObj == null) {
       return new Container();
@@ -39,7 +39,7 @@ class _CurrentForecastState extends State<CurrentForecast> {
             child: new Padding(
               padding: const EdgeInsets.only(top: 15.0, left: 10.0),
               child: new Text(
-                widget.currentForecastObj.summary,
+                widget.currentForecastObj.time,
                 style: new TextStyle(
                   color: Colors.blue,
                   fontSize: 40.0,
