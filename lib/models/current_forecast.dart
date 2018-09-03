@@ -72,7 +72,7 @@ class Current extends Object {
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    map['id'] = id;
+    //map['id'] = id;
     map['summary'] = summary;
     map['icon'] = icon;
     map['precipIntensity'] = precipIntensity;
