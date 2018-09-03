@@ -70,4 +70,18 @@ class Current extends Object {
 
   //factory Current.fromJson(Map<String, dynamic> json)
 
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+    map['id'] = id;
+    map['summary'] = summary;
+    map['icon'] = icon;
+    map['precipIntensity'] = precipIntensity;
+    map['precipProbability'] = precipProbability;
+    map['temperature'] = temperature;
+    map['apparentTemperature'] = apparentTemperature;
+    map['uvIndex'] = uvIndex;
+
+    return map;
+  }
+
 }
