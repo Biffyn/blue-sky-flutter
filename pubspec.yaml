@@ -48,6 +48,7 @@ flutter:
   assets:
     - assets/umbrella.png
     - assets/placeholder.png
+    - assets/bg_clouds.jpg
  
 
   # An image asset can refer to one or more resolution-specific "variants", see

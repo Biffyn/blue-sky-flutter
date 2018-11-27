@@ -67,8 +67,8 @@ class _MyHomePageState extends State<HomePage>
   }
 
   _initialize() async {
-    final location = await _getCoords();
-    final result = location;
+    final Position location = await _getCoords();
+    final Position result = location;
 
     _getAddress(result.latitude, result.longitude).then((res) {
       setState(() {
@@ -90,12 +90,13 @@ class _MyHomePageState extends State<HomePage>
   }
 
   Future<Position> _getCoords() async {
-    Position position = await Geolocator().getLastKnownPosition(LocationAccuracy.high);
+    Position position =
+        await Geolocator().getLastKnownPosition(LocationAccuracy.high);
     return position;
   }
 
   Future<http.Response> _getAddress(double lat, double lng) async {
-    final uri = Uri.https(
+    final Uri uri = Uri.https(
       'us-central1-blue-sky-bfafb.cloudfunctions.net',
       '/geocoding',
       {'latitude': '${lat.toString()}', 'longitude': '${lng.toString()}'},
@@ -121,27 +122,29 @@ class _MyHomePageState extends State<HomePage>
       return new Container();
     }
 
-    final appBar = AppBar(
-      title: Text(_locationData.suburb + ', ' + _locationData.city),
-      backgroundColor: $Colors.primaryColor,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(FontAwesomeIcons.globeAmericas),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyLocationsPage()),
-            );
-          },
-        ),
-      ],
-    );
+    final PreferredSize appBar = PreferredSize(
+      preferredSize: Size.fromHeight(50.0), // here the desired height
+      child: AppBar(
+        title: Text(_locationData.suburb + ', ' + _locationData.city),
+        backgroundColor: $Colors.primaryColor,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(FontAwesomeIcons.globeAmericas),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyLocationsPage()),
+              );
+            },
+          ),
+        ],
+      ));
 
-    final drawer = Drawer(
-      child: ListView(
+    final Drawer drawer = new Drawer(
+      child: new ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
+         new DrawerHeader(
             child: Text('Drawer Header', style: TextStyle(color: Colors.white)),
             decoration: BoxDecoration(
               color: $Colors.primaryColor,
@@ -177,44 +180,29 @@ class _MyHomePageState extends State<HomePage>
       ),
     );
 
-    final pages = PageView(
-      children: [
-        CurrentForecast(currentForecastObj: _currentForecast),
-        HourlyForecast(),
-        DailyForecast(),
-        RadarPage(),
-      ],
-      controller: _pageController,
-      onPageChanged: onPageChanged);
+    final PageView pages = new PageView(children: [
+      CurrentForecast(currentForecastObj: _currentForecast, locationDataObj: _locationData),
+      HourlyForecast(),
+      DailyForecast(),
+      RadarPage(),
+    ], controller: _pageController, onPageChanged: onPageChanged);
 
-    final nav = BottomNavigationBar(
+    final BottomNavigationBar nav = new BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.umbrella), 
-          title: Text("Summary")
-        ),
+            icon: Icon(FontAwesomeIcons.umbrella), title: Text("Summary")),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.clock),
-          title: Text("Hourly")
-        ),
+            icon: Icon(FontAwesomeIcons.clock), title: Text("Hourly")),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.calendarAlt), 
-          title: Text("Daily")
-        ),
+            icon: Icon(FontAwesomeIcons.calendarAlt), title: Text("Daily")),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.map),
-          title: Text("Radar")
-        )
+            icon: Icon(FontAwesomeIcons.map), title: Text("Radar"))
       ],
       onTap: navigationTapped,
       currentIndex: _page,
       type: BottomNavigationBarType.fixed,
     );
 
-    return new Scaffold(
-        appBar: appBar, 
-        drawer: drawer, 
-        body: pages, 
-        bottomNavigationBar: nav);
+    return new Scaffold(appBar: appBar, drawer: drawer, body: pages, bottomNavigationBar: nav);
   }
 }
