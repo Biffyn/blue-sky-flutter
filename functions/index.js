@@ -49,9 +49,19 @@ exports.geocoding = functions.https.onRequest((req, res) => {
 
 function formatAddress(address) {
 
+  let suburb = "";
+
+  if (address.address.suburb) {
+    suburb = address.address.suburb
+  } else if (address.address.locality) {
+    suburb = address.address.locality
+  } else {
+    suburb = null;
+  }
+
   let formattedAddress = {
     city: address.address.city,
-    suburb: address.address.suburb,
+    suburb: suburb,
     latitude: address.lat,
     longitude: address.lon
   }
@@ -67,7 +77,7 @@ function formatDarkSkyUrl(latitude, longitude, units) {
 
 function formatGeocodingUrl(latitude, longitude) {
   const apiKey = functions.config().geocoding.key;
-  return `https://us1.locationiq.com/v1/reverse.php?key=${apiKey}&lat=${latitude}&lon=${longitude}&format=json`
+  return `https://us1.locationiq.com/v1/reverse.php?key=${apiKey}&lat=${latitude}&lon=${longitude}&format=json&zoom=14`
 
  
 }

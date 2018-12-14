@@ -18,6 +18,7 @@ class Current extends Object {
   //final double ozone;
   final String date;
   final String time;
+  final String imageLink;
 
   Current(
       {this.summary,
@@ -36,7 +37,8 @@ class Current extends Object {
       //this.visibility,
       //this.ozone
       this.date,
-      this.time});
+      this.time,
+      this.imageLink});
 
   static _formatDate(int date) {
     //"EEE, MMM d" Wed, Jul 10,
@@ -55,18 +57,83 @@ class Current extends Object {
     return formattedDate;
   }
 
-  
+  static _formatPrecipProbability(precipProbability) {
+    var percent = 0.0;
+
+    if (precipProbability == 0) {
+      precipProbability = 0.0;
+    }
+    
+    if (precipProbability != null) {
+      percent = precipProbability * 100;
+    }
+    percent.toInt();
+    return percent.round();
+  }
+
+static _formatImageLink(String icon) {
+  String formattedLink = '';
+
+  switch (icon) {
+    case 'clear-day':
+      formattedLink = 'assets/img/christmas-tree.webp';
+      break;
+
+    case 'clear-night':
+      formattedLink = 'assets/img/abduction.webp';
+      break;
+
+    case 'rain':
+      formattedLink = 'assets/img/windows.webp';
+      break;
+
+    case 'snow':
+      formattedLink = 'assets/img/snowman.webp';
+      break;
+
+    case 'sleet':
+      formattedLink = 'assets/img/snowman.webp';
+      break;
+
+    case 'wind':
+      formattedLink = 'assets/img/windows.webp';
+      break;
+
+    case 'fog':
+      formattedLink = 'assets/img/windows.webp';
+      break;
+
+    case 'cloudy':
+      formattedLink = 'assets/img/christmas-tree.webp';
+      break;
+
+    case 'partly-cloudy-day':
+      formattedLink = 'assets/img/christmas-tree.webp';
+      break;
+
+    case 'partly-cloudy-night':
+      formattedLink = 'assets/img/abduction.webp';
+      break;
+
+    default:
+      formattedLink = 'assets/img/christmas-tree.webp';
+  }
+
+  return formattedLink;
+
+}
 
   Current.fromJson(Map jsonMap)
       : summary = jsonMap['summary'],
         icon = jsonMap['icon'],
         precipIntensity = jsonMap['precipIntensity'].toDouble(),
-        precipProbability = jsonMap['precipProbability'].toDouble(),
+        precipProbability = _formatPrecipProbability(jsonMap['precipProbability']).toDouble(),
         temperature = jsonMap['temperature'].toDouble(),
         apparentTemperature = jsonMap['apparentTemperature'].toDouble(),
         uvIndex = jsonMap['uvIndex'].toInt(),
         date = _formatDate(jsonMap['time'].toInt()),
-        time = _formatTime(jsonMap['time'].toInt());
+        time = _formatTime(jsonMap['time'].toInt()),
+        imageLink = _formatImageLink(jsonMap['icon']);
 
   //factory Current.fromJson(Map<String, dynamic> json)
 
@@ -85,3 +152,4 @@ class Current extends Object {
   }
 
 }
+

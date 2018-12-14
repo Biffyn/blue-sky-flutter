@@ -25,7 +25,7 @@ class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-
+  
   @override
   _MyHomePageState createState() => new _MyHomePageState();
 }
@@ -35,9 +35,11 @@ class _MyHomePageState extends State<HomePage>
   LocationData _locationData;
   Current _currentForecast;
   PageController _pageController;
+  String _locationText;
   int _page = 0;
-
+  bool isHomePage = true;
   bool isBusy = false;
+  bool isLocationWithSuburb = false;
 
   final PublishSubject subject = PublishSubject<String>();
 
@@ -61,6 +63,13 @@ class _MyHomePageState extends State<HomePage>
   }
 
   void onPageChanged(int page) {
+
+    if (page == 0) {
+      this.isHomePage = true;
+    } else {
+      this.isHomePage = false;
+    }
+
     setState(() {
       this._page = page;
     });
@@ -120,12 +129,21 @@ class _MyHomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     if (_locationData == null) {
       return new Container();
+    } else {
+      if (_locationData.suburb == null) {
+        isLocationWithSuburb = false;
+      } else {
+        isLocationWithSuburb = true;
+      }
+      _locationText = isLocationWithSuburb ? _locationData.suburb + ', ' + _locationData.city : _locationData.city;
     }
 
+
+
     final PreferredSize appBar = PreferredSize(
-      preferredSize: Size.fromHeight(50.0), // here the desired height
+      preferredSize: Size.fromHeight(50.0),
       child: AppBar(
-        title: Text(_locationData.suburb + ', ' + _locationData.city),
+        title: Text(_locationText),
         backgroundColor: $Colors.primaryColor,
         actions: <Widget>[
           IconButton(
@@ -181,7 +199,7 @@ class _MyHomePageState extends State<HomePage>
     );
 
     final PageView pages = new PageView(children: [
-      CurrentForecast(currentForecastObj: _currentForecast, locationDataObj: _locationData),
+      CurrentForecast(currentForecastObj: _currentForecast, locationText: _locationText),
       HourlyForecast(),
       DailyForecast(),
       RadarPage(),
@@ -203,6 +221,6 @@ class _MyHomePageState extends State<HomePage>
       type: BottomNavigationBarType.fixed,
     );
 
-    return new Scaffold(appBar: appBar, drawer: drawer, body: pages, bottomNavigationBar: nav);
+    return new Scaffold(appBar: isHomePage ? null : appBar, drawer: drawer, body: pages);
   }
 }

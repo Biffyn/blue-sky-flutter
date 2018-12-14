@@ -48,7 +48,22 @@ flutter:
   assets:
     - assets/umbrella.png
     - assets/placeholder.png
-    - assets/bg_clouds.jpg
+    - assets/img/clear-day.webp
+    - assets/img/clear-night.webp
+    - assets/img/cloudy.webp
+    - assets/img/fog.webp
+    - assets/img/partly-cloudy-day.webp
+    - assets/img/partly-cloudy-night.webp
+    - assets/img/rain.webp
+    - assets/img/snowman.webp
+    - assets/img/wind.webp
+    - assets/img/christmas-tree.webp
+    - assets/img/abduction.webp
+    - assets/img/snowman.webp
+    - assets/img/windows.webp
+    - assets/img/default.webp
+    - assets/img/ic_distance.png
+    - assets/img/ic_gravity.png
  
 
   # An image asset can refer to one or more resolution-specific "variants", see
