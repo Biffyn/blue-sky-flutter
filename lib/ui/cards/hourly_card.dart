@@ -1,0 +1,245 @@
+import 'package:blue_sky/ui/forecast/hourly.dart';
+import 'package:flutter/material.dart';
+
+// class HourlyCard extends StatefulWidget {
+//   final locationText;
+
+//   HourlyCard({
+//     this.locationText
+//   });
+
+//   @override
+//   _HourlyCardState createState() => _HourlyCardState();
+// }
+
+// class _HourlyCardState extends State<HourlyCard> {
+//   @override
+//   Widget build(BuildContext context) {
+//      final baseTextStyle =
+//       const TextStyle(
+//         fontFamily: 'Poppins'
+//       );
+
+//     final regularTextStyle = baseTextStyle.copyWith(
+//       color: const Color(0xffb6b2df),
+//         fontSize: 9.0,
+//         fontWeight: FontWeight.w400
+//     );
+
+//     final subHeaderTextStyle = regularTextStyle.copyWith(
+//       fontSize: 12.0
+//     );
+
+//     final headerTextStyle = baseTextStyle.copyWith(
+//       color: Colors.white,
+//       fontSize: 20.0,
+//       fontWeight: FontWeight.w600
+//     );
+
+//     Widget _planetValue({
+//       String value,
+//       String image
+//     }) {
+//       return new Row(
+//         children: < Widget > [
+//           new Image.asset(image, height: 12.0),
+//           new Container(width: 8.0),
+//           new Text(value, style: regularTextStyle),
+//         ]
+//       );
+//     }
+
+//     final hourlyCardContent = new Container(
+//       margin: new EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+//       constraints: new BoxConstraints.expand(),
+//       child: new Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: < Widget > [
+//           new Container(height: 4.0),
+//           new Text('Hourly Forecast', style: headerTextStyle),
+//           new Container(height: 10.0),
+//           new Text('Mostly cloudy until tomorrow morning.', style: subHeaderTextStyle),
+//           new Container(
+//             margin: new EdgeInsets.symmetric(vertical: 8.0),
+//             height: 2.0,
+//             width: 58.0,
+//             color: new Color(0xff00c6ff)
+//           ),
+//           new Row(
+//             children: < Widget > [
+//               new Expanded(
+//                 child: _planetValue(
+//                   value: 'Location',
+//                   image: 'assets/img/ic_distance.png')
+
+//               ),
+//               new Expanded(
+//                 child: _planetValue(
+//                   value: 'Chance of rain',
+//                   image: 'assets/img/ic_gravity.png')
+//               )
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+
+//     final hourlyCard = new Container(
+//       child: hourlyCardContent,
+//       height: 200.0,
+//       decoration: new BoxDecoration(
+//         color: new Color(0xFF333366),
+//         shape: BoxShape.rectangle,
+//         borderRadius: new BorderRadius.circular(8.0),
+//         boxShadow: < BoxShadow > [
+//           new BoxShadow(
+//             color: Colors.black26,
+//             blurRadius: 10.0,
+//             offset: new Offset(0.0, 10.0),
+//           ),
+//         ],
+//       ),
+//     );
+
+//     return new GestureDetector(
+//       onTap: () {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => HourlyForecast(locationText: widget.locationText)),
+//         );
+//       },
+
+//       child: new Container(
+//         margin: const EdgeInsets.symmetric(
+//             vertical: 10.0,
+//             horizontal: 14.0,
+//           ),
+//           child: new Stack(
+//             children: < Widget > [
+//               hourlyCard,
+//             ],
+//           )
+//       )
+//     );
+
+//   }
+// }
+
+class HourlyCard extends StatelessWidget {
+  final locationText;
+
+  HourlyCard({
+    this.locationText
+  });
+
+  @override
+  Widget build(BuildContext context) {
+
+    final baseTextStyle =
+      const TextStyle(
+        fontFamily: 'Poppins'
+      );
+
+    final regularTextStyle = baseTextStyle.copyWith(
+      color: const Color(0xffb6b2df),
+        fontSize: 9.0,
+        fontWeight: FontWeight.w400
+    );
+
+    final subHeaderTextStyle = regularTextStyle.copyWith(
+      fontSize: 12.0
+    );
+
+    final headerTextStyle = baseTextStyle.copyWith(
+      color: Colors.white,
+      fontSize: 20.0,
+      fontWeight: FontWeight.w600
+    );
+
+    Widget _planetValue({
+      String value,
+      String image
+    }) {
+      return new Row(
+        children: < Widget > [
+          new Image.asset(image, height: 12.0),
+          new Container(width: 8.0),
+          new Text(value, style: regularTextStyle),
+        ]
+      );
+    }
+
+    final hourlyCardContent = new Container(
+      margin: new EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+      constraints: new BoxConstraints.expand(),
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: < Widget > [
+          new Container(height: 4.0),
+          new Text('Hourly Forecast', style: headerTextStyle),
+          new Container(height: 10.0),
+          new Text('Mostly cloudy until tomorrow morning.', style: subHeaderTextStyle),
+          new Container(
+            margin: new EdgeInsets.symmetric(vertical: 8.0),
+            height: 2.0,
+            width: 58.0,
+            color: new Color(0xff00c6ff)
+          ),
+          new Row(
+            children: < Widget > [
+              new Expanded(
+                child: _planetValue(
+                  value: 'Location',
+                  image: 'assets/img/ic_distance.png')
+
+              ),
+              new Expanded(
+                child: _planetValue(
+                  value: 'Chance of rain',
+                  image: 'assets/img/ic_gravity.png')
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+
+    final hourlyCard = new Container(
+      child: hourlyCardContent,
+      height: 200.0,
+      decoration: new BoxDecoration(
+        color: new Color(0xFF333366),
+        shape: BoxShape.rectangle,
+        borderRadius: new BorderRadius.circular(8.0),
+        boxShadow: < BoxShadow > [
+          new BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10.0,
+            offset: new Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+    );
+
+    return new GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HourlyForecast(locationText: this.locationText)),
+        );
+      },
+
+      child: new Container(
+        margin: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 14.0,
+          ),
+          child: new Stack(
+            children: < Widget > [
+              hourlyCard,
+            ],
+          )
+      )
+    );
+  }
+}

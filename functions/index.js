@@ -72,7 +72,7 @@ function formatAddress(address) {
 /// Helper to format the request URL
 function formatDarkSkyUrl(latitude, longitude, units) {
   const apiKey = functions.config().darksky.key;
-  return `https://api.darksky.net/forecast/${apiKey}/${latitude},${longitude}?units=${units}`
+  return `https://api.darksky.net/forecast/${apiKey}/${latitude},${longitude}?units=${units}?lang=de`
 }
 
 function formatGeocodingUrl(latitude, longitude) {

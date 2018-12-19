@@ -34,7 +34,7 @@ class DailyCard extends StatelessWidget {
       );
     }
 
-    final planetCardContent = new Container(
+    final dailyCardContent = new Container(
       margin: new EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       constraints: new BoxConstraints.expand(),
       child: new Column(
@@ -69,8 +69,8 @@ class DailyCard extends StatelessWidget {
       ),
     );
 
-    final planetCard = new Container(
-      child: planetCardContent,
+    final dailyCard = new Container(
+      child: dailyCardContent,
       height: 200.0,
       decoration: new BoxDecoration(
         color: new Color(0xFF333366),
@@ -93,7 +93,7 @@ class DailyCard extends StatelessWidget {
       ),
       child: new Stack(
         children: <Widget>[
-          planetCard,
+          dailyCard,
         ],
       )
     );

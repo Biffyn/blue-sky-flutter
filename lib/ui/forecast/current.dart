@@ -1,6 +1,8 @@
 import 'package:blue_sky/models/current_forecast.dart';
+import 'package:blue_sky/models/currently_model.dart';
 import 'package:blue_sky/models/location_data.dart';
 import 'package:blue_sky/ui/cards/daily_card.dart';
+import 'package:blue_sky/ui/cards/hourly_card.dart';
 import 'package:blue_sky/ui/cards/outlook_card.dart';
 import 'package:blue_sky/ui/locations/my_locations.dart';
 import 'package:blue_sky/ui/theme/theme.dart';
@@ -8,10 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final primaryColor =
-  const Color(0xFF38B6FF);
+  const Color(0xff00c6ff);
 
 class CurrentForecast extends StatefulWidget {
-  final Current currentForecastObj;
+  final Currently currentForecastObj;
   final locationText;
 
   CurrentForecast({
@@ -22,7 +24,7 @@ class CurrentForecast extends StatefulWidget {
   _CurrentForecastState createState() => new _CurrentForecastState();
 }
 
-class _CurrentForecastState extends State < CurrentForecast > {
+class _CurrentForecastState extends State <CurrentForecast> {
   @override
 
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class _CurrentForecastState extends State < CurrentForecast > {
               padding: EdgeInsets.fromLTRB(20.0, 80.0, 20.0, 20.0),
               decoration: new BoxDecoration(
                 image: new DecorationImage(
-                  image: new AssetImage(widget.currentForecastObj.imageLink),
+                  image: new AssetImage('assets/img/abduction.webp'),
                   fit: BoxFit.cover,
                 )
               ),
@@ -66,16 +68,16 @@ class _CurrentForecastState extends State < CurrentForecast > {
                     children: < Widget > [
                       new Text('Now',
                         style: new TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 30.0,
                           color: Colors.white,
-                          fontWeight: FontWeight.w500
+                          fontWeight: FontWeight.w200
                         )
                       ),
                       new Text(widget.currentForecastObj.time,
                         style: new TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 30.0,
                           color: Colors.white,
-                          fontWeight: FontWeight.w500
+                          fontWeight: FontWeight.w200
                         )
                       ),
 
@@ -101,7 +103,8 @@ class _CurrentForecastState extends State < CurrentForecast > {
                               ),
                             ],
                             color: Colors.white,
-                            fontSize: 70.0,
+                            fontWeight: FontWeight.w200,
+                            fontSize: 80.0,
                           ),
                         ),
                       ],
@@ -127,7 +130,8 @@ class _CurrentForecastState extends State < CurrentForecast > {
                               ),
                             ],
                             color: Colors.white,
-                            fontSize: 28.0,
+                            fontWeight: FontWeight.w200,
+                            fontSize: 30,
                           ),
                         ),
                       ]
@@ -153,7 +157,8 @@ class _CurrentForecastState extends State < CurrentForecast > {
                               ),
                             ],
                             color: Colors.white,
-                            fontSize: 18.0,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w200,
                           ),
                         ),
                       ]
@@ -179,7 +184,8 @@ class _CurrentForecastState extends State < CurrentForecast > {
                               ),
                             ],
                             color: Colors.white,
-                            fontSize: 18.0,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w200,
                           ),
                         ),
                       ]
@@ -222,7 +228,7 @@ class _CurrentForecastState extends State < CurrentForecast > {
               itemExtent: 200.0,
               delegate: new SliverChildBuilderDelegate(
 
-                (BuildContext context, int index) => new OutlookCard(),
+                (BuildContext context, int index) => new HourlyCard(locationText: widget.locationText),
                 childCount: 1
               ),
             ),
